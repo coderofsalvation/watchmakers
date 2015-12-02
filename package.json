@@ -1,0 +1,40 @@
+{
+  "name": "watchmakers",
+  "version": "1.0.0",
+  "description": "watch multiple files, directories and run commands accordingly, in a few lines of bash + cute bonus animation",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "bin": { "watchmakers":"watchmakers" },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://coderofsalvation@github.com/coderofsalvation/watchmakers.git"
+  },
+  "keywords": [
+    "util",
+    "files",
+    "watch",
+    "build",
+    "tool",
+    "trees",
+    "filetrees",
+    "automate",
+    "lightweight",
+    "minimal",
+    "watchfile",
+    "watching",
+    "processes",
+    "bash",
+    "unix"
+  ],
+  "author": "coderofsalvation",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coderofsalvation/watchmakers/issues"
+  },
+  "homepage": "https://github.com/coderofsalvation/watchmakers#readme"
+}

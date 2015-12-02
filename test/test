@@ -1,0 +1,9 @@
+#!/bin/bash 
+SELFDIR="$(dirname "$(readlink -f "$0")" )"
+cd $SELFDIR
+
+timeout 5s ../watchmakers "$(pwd):touch foo" &
+sleep 3s
+touch bar
+sleep 3s
+ls -la foo &>/dev/null && echo "OK" || echo "ERROR"

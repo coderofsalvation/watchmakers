@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# script:  watch
+# author:  Mike Smullin <mike@smullindesign.com>
+# license: GPLv3
+# description:
+#   watches the given paths for changes
+#   and executes a given command when changes occur
+# usage:
+#   watch <path:cmd...> [......]
+#
+# 2015-12-02 Coder of Salvation: added multipath/multicommand
+declare -A shas
+anim=('ʕ • x • ʔ' 'ʕ • x • ʔ' 'ʕ  •x  •ʔ' 'ʕ•  x•  ʔ' 'ʕ • x • ʔ' 'ʕ - x • ʔ')
+aindex=0
+[[ ! -n $1 ]] && { 
+  echo "Usage: $0 <path:cmd> [path:cmd]
+
+Example: 
+  $0 '/foo/bar:make foo' 'node_modules/flop:npm run-script compile'
+  "
+  exit; 
+}
+
+update_sha() {
+  ls -lR --time-style=full-iso $1 | sha1sum
+}
+
+get_path(){
+  echo "${1/:*/}"
+}
+
+get_cmd(){
+  echo "${1/*:/}"
+}
+
+compare() {
+  sha="$(update_sha "$1")"
+  if [[ $sha != "${shas["$1"]}" ]] ; then
+    shas["$1"]="$sha"
+    printf "\nchange detected!\n"; set -x; cd "$1"; ${2}; set +x; echo ""
+  fi
+}
+
+trap 'tput cnorm -- normal; exit' SIGINT
+trap build SIGQUIT
+
+run(){
+  tput civis      -- invisible
+  echo '
+                _/_    /                /            
+     , , , __.  /  _. /_  ______  __.  /_  _  __  _  
+    (_(_/_(_/|_<__(__/ /_/ / / <_(_/|_/ <_</_/ (_/_)_
+                                                     
+    -> Press Ctrl+\\ to force build, Ctrl+C to exit.
+    -> watching "'$path'"
+  
+  '
+  for target in "$@"; do 
+    path="$(get_path "$target")"
+    echo "    watching '$path'"
+    shas["$path"]="$(update_sha "$path")"
+  done
+  echo ""
+  while true; do
+    for target in "$@"; do compare "$(get_path "$target")" "$(get_cmd "$target")"; done
+    tput el; printf "\r    ${anim[$aindex]} "
+    (( aindex >= ${#anim[@]} )) && aindex=0 || aindex=$((aindex+1)) 
+    sleep 1
+  done
+}
+
+run "$@"

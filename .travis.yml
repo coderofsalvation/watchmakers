@@ -1,2 +1,2 @@
 install: true
-script: ./testrun
+script: ./test/test
