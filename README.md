@@ -1,4 +1,4 @@
-<img alt='' src='https://travis-ci.org/coderofsalvation/watchmakers.svg'/>
+[![Build Status](https://travis-ci.org/coderofsalvation/watchmakers.svg?branch=master)]
 
 ## Usage
 
