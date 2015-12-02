@@ -1,6 +1,6 @@
 {
   "name": "watchmakers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "watch multiple files, directories and run commands accordingly, in a few lines of bash + cute bonus animation",
   "main": "index.js",
   "directories": {
