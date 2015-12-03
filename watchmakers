@@ -12,6 +12,7 @@
 declare -A shas
 anim=('ʕ • x • ʔ' 'ʕ • x • ʔ' 'ʕ  •x  •ʔ' 'ʕ•  x•  ʔ' 'ʕ • x • ʔ' 'ʕ - x • ʔ')
 aindex=0
+targets=()
 [[ ! -n $1 ]] && { 
   echo "Usage: $0 <path:cmd> [path:cmd]
 
@@ -37,12 +38,20 @@ compare() {
   sha="$(update_sha "$1")"
   if [[ $sha != "${shas["$1"]}" ]] ; then
     shas["$1"]="$sha"
-    printf "\nchange detected!\n"; set -x; cd "$1"; ${2}; set +x; echo ""
+    printf "\nchange detected!\n"; build "$1" "$2"
   fi
 }
 
+build(){
+  set -x; cd "$1"; ${2}; set +x; echo ""
+}
+
+buildall(){
+  for target in "${targets[@]}"; do build "$(get_path "$target")" "$(get_cmd "$target")"; done
+}
+
 trap 'tput cnorm -- normal; exit' SIGINT
-trap build SIGQUIT
+trap 'buildall $targets' SIGQUIT
 
 run(){
   tput civis      -- invisible
@@ -51,11 +60,12 @@ run(){
      , , , __.  /  _. /_  ______  __.  /_  _  __  _  
     (_(_/_(_/|_<__(__/ /_/ / / <_(_/|_/ <_</_/ (_/_)_
                                                      
-    -> Press Ctrl+\\ to force build, Ctrl+C to exit.
+    -> Press Ctrl+\ to force build, Ctrl+C to exit.
     -> watching "'$path'"
   
   '
   for target in "$@"; do 
+    targets+=("$target")
     path="$(get_path "$target")"
     echo "    watching '$path'"
     shas["$path"]="$(update_sha "$path")"
